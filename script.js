@@ -1,15 +1,11 @@
-/* Psudo code for a Rock Paper Scissors style command line game in Javascript */
+// Declare global variables / cache DOM elements
+let round = 1;
+let computerScore = 0;
+let playerScore = 0;
+const action_Text = document.getElementById("gameText");
+const score_Text = document.getElementById("score");
 
-/* Print "Rock, Paper, Scissors" */
-
-/*  Begin with a function getComputerChoice that will randomly select one of "Rock, Paper, or Scissor" */
-/*  This function should choose a random int between 1 - 3 and return that int. */
-function getComputerChoice() {
-    return Math.floor(Math.random() * 3);
-}
-
-/*  Create function that returns a variable computerChoice that stores the converted int to Rock paper or scissors, use if statements */
-
+// Generate random choice for computer
 function getComputerChoice() {
     let random = Math.floor(Math.random() * 3);
     let computerChoiceInt = random;
@@ -22,22 +18,7 @@ function getComputerChoice() {
     }
 }
 
-/*  Create function that gets a variable playerChoice that asks the player to input Rock Paper or scissors then stores it as a string. 
-    Make sure to store the value as a string with the 1st letter uppercased reguarless of input 
-    using .toLowerCase() , .charAt() , .toUpperCase() and .slice() methods */
-function getPlayersChoice() {
-
-    let playerChoice = prompt("Players Turn: "); 
-    playerChoice = playerChoice.toLowerCase();
-    return playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1);
-
-}
-/*  Print stuff to the console */
-// console.log(playerChoice);
-// console.log(computerChoice);
-
-/*  Create the main function playRound that takes 2 paremeters (computerChoice, playerChouce) 
-    The function will compare both choices, then print the winner to the console. */
+// Play round using computer choice and player choice, add to either score
 function playRound(computerChoice,playerChoice) {
     let winner = "";
     if (computerChoice === playerChoice) {
@@ -64,51 +45,65 @@ function playRound(computerChoice,playerChoice) {
     }
 
     if (winner === "Player 1") {
-        console.log(`${playerChoice} beats ${computerChoice}! Player 1 Wins!`);
+        playerScore++;
+        action_Text.textContent = `${playerChoice} beats ${computerChoice}! Player 1 Wins!`;
+        score_Text.textContent = `Player's Score: ${playerScore} Computer's Score: ${computerScore}`;
         return winner;
+        
     } else {
-        console.log(`${computerChoice} beats ${playerChoice}! The Computer Wins!`);
+        playerScore++;
+        action_Text.textContent =`${computerChoice} beats ${playerChoice}! The Computer Wins!`;
+        score_Text.textContent = `Player's Score: ${playerScore} Computer's Score: ${computerScore}`;
+        computerScore++;
         return winner;
     }
+    
 }
 
 
-// Create a function called game() that will loop the playRound function 5 times and keep score of the winner at the end
-// then print the winner of 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let round = 1;
-    let computerChoice = "";
-    let playerChoice = "";
-    let roundWinner = "";
-    while (round <= 5) 
-    {
-        computerChoice = getComputerChoice();
-        playerChoice = getPlayersChoice();
-        roundWinner = playRound(computerChoice,playerChoice);
+
+// Starts game when button is clicked, add event listeners to buttons
+// 
+function startGame() {
+    const rock_Button = document.querySelector("#rock");
+    const paper_Button = document.querySelector("#paper");
+    const scissors_Button = document.querySelector("#scissors");
+ 
+    rock_Button.addEventListener("click", function() {
+         startRound("Rock");
+    });
+    paper_Button.addEventListener("click", function() {
+        startRound("Paper");
+ 
+    });
+    scissors_Button.addEventListener("click", function() {
+         startRound("Scissors");
+ 
+    });
+ }
 
 
-        if (roundWinner === "Player 1") {
-            playerScore++;
-        } else if (roundWinner === "Computer") {
-            computerScore++;
-        }
-        console.log(`Round: ${round} Player 1 Score: ${playerScore} Computer Score: ${computerScore}`);
-        round++
+ // Handles round logic / end of game logic
+function startRound(button) {
+    let playerChoice = button;
+    let computerChoice = getComputerChoice();
+    let winner = playRound(computerChoice,playerChoice);
+    console.log(playerChoice,computerChoice, winner);
+
+    if (playerScore > 5 || computerScore > 5) {
+        action_Text.textContent = "GAME OVER!"
+        location.reload();
+
     }
-    if (playerScore === computerScore) {
-        console.log("It's a tie??????")
-    } else {
-        if (playerScore > computerScore) {
-            console.log("Player 1 WINS!")
-        } else {
-            console.log("The Computer wins :_(")
-        }
-    }
+    
 
 }
 
-game();
-/* Print the result of the playRound function (Which should print a sentence about who wins) */
+startGame();
+
+
+
+
+
+
 
